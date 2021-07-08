@@ -1,8 +1,8 @@
 #include "pipex.h"
 
-void ft_any_argument(t_monna *lisa, int count)
+void	ft_any_argument(t_monna *lisa, int count)
 {
-	t_any any;
+	t_any	any;
 
 	any.mas = ft_split(lisa->tokens[count], ' ');
 	any.str = ft_strjoin("/bin/", any.mas[0]);
@@ -10,7 +10,11 @@ void ft_any_argument(t_monna *lisa, int count)
 	if (any.pid == 0)
 	{
 		if (execve(any.str, any.mas, lisa->my_env) == -1)
-			printf("pipex: %s: command not found\n", any.mas[0]);
+		{
+			ft_putstr_fd("pipex: ", 1);
+			ft_putstr_fd(any.mas[0], 1);
+			ft_putendl_fd(": command not found", 1);
+		}
 		free(any.str);
 		exit(EXIT_FAILURE);
 	}
@@ -20,33 +24,35 @@ void ft_any_argument(t_monna *lisa, int count)
 		free(any.str);
 }
 
-void ft_executor(t_monna *lisa)
+void	ft_executor(t_monna *l)
 {
-	int count;
+	int	count;
+	int	len;
 
-	if (lisa->flag_file)
+	if (l->flag_file)
 		count = 1;
 	else
 		count = 2;
-	while (count < ft_lenmassive(lisa->tokens) - 2)
+	while (count < ft_lenmassive(l->tokens) - 2)
 	{
-		ft_pipe(lisa, count);
-		ft_any_argument(lisa, count);
-		ft_pipe_stdin(lisa);
+		ft_pipe(l, count);
+		ft_any_argument(l, count);
+		ft_pipe_stdin(l);
 		count++;
 	}
-	if (lisa->flag_herodoc && ft_lenmassive(lisa->tokens) == 4)
-		ft_pipe(lisa, count);
-	if (lisa->flag_file)
-		lisa->fd = open(lisa->tokens[ft_lenmassive(lisa->tokens) - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	len = ft_lenmassive(l->tokens) - 1;
+	if (l->flag_herodoc && ft_lenmassive(l->tokens) == 4)
+		ft_pipe(l, count);
+	if (l->flag_file)
+		l->fd = open(l->tokens[len], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	else
-		lisa->fd = open(lisa->tokens[ft_lenmassive(lisa->tokens) - 1], O_WRONLY | O_APPEND | O_CREAT, 0644);
-	dup2(lisa->fd, 1);
-	ft_any_argument(lisa, count);
-	close(lisa->fd);
+		l->fd = open(l->tokens[len], O_WRONLY | O_APPEND | O_CREAT, 0644);
+	dup2(l->fd, 1);
+	ft_any_argument(l, count);
+	close(l->fd);
 }
 
-void ft_red_4_sup(t_red_4 *aa, t_monna *lisa, char *count)
+void	ft_red_4_sup(t_red_4 *aa, t_monna *lisa, char *count)
 {
 	while (1)
 	{
@@ -56,7 +62,7 @@ void ft_red_4_sup(t_red_4 *aa, t_monna *lisa, char *count)
 		{
 			if (aa->str)
 				free(aa->str);
-			break;
+			break ;
 		}
 		if (!lisa->list)
 		{
@@ -71,15 +77,13 @@ void ft_red_4_sup(t_red_4 *aa, t_monna *lisa, char *count)
 	}
 }
 
-void ft_heredoc(t_monna *lisa)
+void	ft_heredoc(t_monna *lisa)
 {
-	t_red_4 aa;
+	t_red_4	aa;
 
-	lisa->flag_red_output = 1;
-	lisa->flag_red_4 = 1;
 	ft_red_4_sup(&aa, lisa, lisa->tokens[1]);
 	aa.tmp = lisa->list;
-	aa.fd = open("1", O_WRONLY | O_TRUNC | O_CREAT, 0200 | 0400);
+	aa.fd = open("1", O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	while (aa.tmp)
 	{
 		if (aa.tmp->content)

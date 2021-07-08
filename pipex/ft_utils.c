@@ -12,9 +12,9 @@ int	ft_lenmassive(char **str)
 	return (i);
 }
 
-void ft_free_mass(char **mas)
+void	ft_free_mass(char **mas)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (mas[i])
@@ -22,24 +22,24 @@ void ft_free_mass(char **mas)
 	free(mas);
 }
 
-void ft_pipe_stdin(t_monna *lisa)
+void	ft_pipe_stdin(t_monna *lisa)
 {
 	dup2(lisa->fd_output, 1);
 	dup2(lisa->fildes[0], 0);
 	close(lisa->fildes[0]);
 }
 
-void ft_pipe(t_monna *l, int i)
+void	ft_pipe(t_monna *l, int i)
 {
 	pipe(l->fildes);
 	dup2(l->fildes[1], 1);
 	close(l->fildes[1]);
 }
 
-void ft_list_clear(t_list **head)
+void	ft_list_clear(t_list **head)
 {
-	t_list *tmp;
-	t_list *list;
+	t_list	*tmp;
+	t_list	*list;
 
 	list = *head;
 	tmp = NULL;

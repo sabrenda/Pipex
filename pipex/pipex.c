@@ -2,7 +2,7 @@
 
 void	ft_file(t_monna *lisa)
 {
-	int fd;
+	int	fd;
 
 	fd = open(lisa->tokens[0], O_RDONLY);
 	dup2(fd, 0);
@@ -10,9 +10,9 @@ void	ft_file(t_monna *lisa)
 	lisa->flag_file = 1;
 }
 
-int ft_init_env(t_monna *lisa, char **env)
+int	ft_init_env(t_monna *lisa, char **env)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	ft_bzero(lisa, sizeof(t_monna));
@@ -34,10 +34,10 @@ int ft_init_env(t_monna *lisa, char **env)
 	return (1);
 }
 
-int ft_init_all(t_monna *lisa, char **env, int ac, char **av)
+int	ft_init_all(t_monna *lisa, char **env, int ac, char **av)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	j = 0;
